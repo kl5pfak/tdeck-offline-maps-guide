@@ -36,7 +36,44 @@ You must include low zoom levels like `4`, `5`, and `6` or the map may appear bl
 
 ## Easy workflow
 
-Generate and copy a working map set with:
+Generate and copy a working map set with:  ./build.sh 
 
-```bash
-./build.sh 
+##SD card structure
+/maps/osm/4
+/maps/osm/5
+/maps/osm/6
+/maps/osm/7
+/maps/osm/8
+/maps/osm/9
+/maps/osm/10
+
+Common problems
+
+Blank map
+
+Usually caused by missing low zoom tiles.
+
+403 errors
+
+Usually caused by downloading from public OpenStreetMap tile servers.
+
+Maps not loading
+
+Usually caused by wrong SD path. Use:
+
+/maps/osm/
+
+Examples
+	•	Fairbanks example￼
+	•	Charleston example￼
+	•	Alaska regional builds￼
+
+Notes
+
+Use small regional builds first.
+Do not start with a huge full-state high zoom build on a free tile API plan.
+
+Credits
+	•	Meshtastic
+	•	LilyGO T-Deck
+	•	tdeck-maps

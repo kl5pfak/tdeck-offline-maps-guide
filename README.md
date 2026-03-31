@@ -16,7 +16,7 @@
 
 ## Example
 
-<<p align="center">
+<p align="center">
   <img src="screenshots/tdeck-map-working.jpeg" width="400">
 </p>
 
@@ -49,16 +49,20 @@ The T-Deck does not download maps itself.
 
 ⸻
 
-📁 Expected SD card layout
+cat >> README.md <<'EOF'
 
-   /maps/osm/
-   ├── 4/
-   ├── 5/
-   ├── 6/
-   ├── 7/
-   ├── 8/
-   ├── 9/
-   └── 10/
+## 📁 The SD card must look exactly like this:
+
+    /maps/osm/
+    ├── 4/
+    ├── 5/
+    ├── 6/
+    ├── 7/
+    ├── 8/
+    ├── 9/
+    └── 10/
+
+EOF
 
 ⚠️ Important
 

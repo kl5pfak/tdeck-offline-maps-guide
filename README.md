@@ -1,5 +1,6 @@
 # T-Deck Offline Maps Guide
 
+![T-Deck Map Working](screenshots/tdeck-map-working.jpg)
 Simple guide to get offline maps working on the T-Deck.
 
 ## Quick Start

@@ -1,13 +1,11 @@
 # T-Deck Offline Maps Guide
 
-![T-Deck Map Working](tdeck-map-working.jpeg)
-
 Simple guide to get offline maps working on the T-Deck.
 
 ## Quick Start
 
 1. Clone tile generator:
-   git clone https://github.com/JustDr00py/tdeck-maps~/tdeck-maps
+   git clone https://github.com/JustDr00py/tdeck-maps ~/tdeck-maps
 
 2. Add your Thunderforest API key inside:
    meshtastic_tiles.py → get_tile_url()

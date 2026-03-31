@@ -47,8 +47,7 @@ git clone https://github.com/JustDr00py/tdeck-maps ~/tdeck-maps
 
 The T-Deck does not download maps itself.
 
-⸻
-<<'EOF'
+
 
 ## 📁 The SD card must look exactly like this:
 
@@ -61,7 +60,6 @@ The T-Deck does not download maps itself.
     ├── 9/
     └── 10/
 
-EOF
 
 ⚠️ Important
 

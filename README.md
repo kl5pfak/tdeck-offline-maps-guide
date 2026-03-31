@@ -1,5 +1,4 @@
 # T-Deck Offline Maps Guide
-Field-tested offline maps for Meshtastic T-Deck (Alaska + Lower 48)
 <p align="center">
   <img alt="Platform" src="https://img.shields.io/badge/platform-T--Deck-blue">
   <img alt="Maps" src="https://img.shields.io/badge/maps-offline-green">
@@ -9,7 +8,7 @@ Field-tested offline maps for Meshtastic T-Deck (Alaska + Lower 48)
 </p>
 
 <p align="center">
-  Simple guide to get offline maps working on the LilyGO T-Deck using Meshtastic MUI and an SD card.
+  Simple guide to get offline maps working on the LilyGO T-Deck using Meshtastic MUI and an SD card. Field-tested offline maps for Meshtastic T-Deck (Alaska + Lower 48)
 </p>
 
 ---

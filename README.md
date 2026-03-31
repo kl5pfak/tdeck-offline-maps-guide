@@ -1,5 +1,5 @@
 # T-Deck Offline Maps Guide
-
+Field-tested offline maps for Meshtastic T-Deck (Alaska + Lower 48)
 <p align="center">
   <img alt="Platform" src="https://img.shields.io/badge/platform-T--Deck-blue">
   <img alt="Maps" src="https://img.shields.io/badge/maps-offline-green">
@@ -48,7 +48,6 @@ git clone https://github.com/JustDr00py/tdeck-maps ~/tdeck-maps
 The T-Deck does not download maps itself.
 
 
-
 ## 📁 The SD card must look exactly like this:
 
     /maps/osm/
@@ -60,6 +59,7 @@ The T-Deck does not download maps itself.
     ├── 9/
     └── 10/
 
+If this structure is wrong, maps will NOT load.
 
 ⚠️ Important
 

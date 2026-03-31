@@ -16,8 +16,8 @@
 
 ## Example
 
-<p align="center">
-  <img src="screenshots/tdeck-map-working.jpg" width="400">
+<<p align="center">
+  <img src="screenshots/tdeck-map-working.jpeg" width="400">
 </p>
 
 ---

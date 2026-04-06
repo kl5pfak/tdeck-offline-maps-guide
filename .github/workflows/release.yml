@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build release archive
+        run: |
+          VERSION="${GITHUB_REF_NAME}"
+          ARCHIVE="tdeck-offline-maps-${VERSION}.tar.gz"
+          tar -czf "$ARCHIVE" \
+            README.md \
+            build-core.sh \
+            build-ak.sh \
+            build-ak-full.sh \
+            "build-charleston.sh "
+          echo "ARCHIVE=$ARCHIVE" >> "$GITHUB_ENV"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "T-Deck Offline Maps Guide ${{ github.ref_name }}"
+          body: |
+            ## T-Deck Offline Maps Guide ${{ github.ref_name }}
+
+            Offline map tile builder scripts for the LilyGO T-Deck running Meshtastic MUI.
+
+            ### Included scripts
+            | Script | Purpose |
+            |---|---|
+            | `build-core.sh` | Core build script — accepts city, zoom, source, and SD card name |
+            | `build-ak.sh` | Quick build for Fairbanks, Alaska (zoom 4–12) |
+            | `build-ak-full.sh` | Full Alaska statewide base + Fairbanks high-res detail |
+            | `build-charleston.sh` | Quick build for Charleston, South Carolina (zoom 4–10) |
+
+            ### Quick start
+            See [README.md](https://github.com/${{ github.repository }}/blob/main/README.md) for full setup instructions.
+          files: ${{ env.ARCHIVE }}
+          fail_on_unmatched_files: true

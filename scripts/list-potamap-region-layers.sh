@@ -19,36 +19,40 @@ usage() {
   exit 1
 }
 
-if [[ $# -lt 1 ]]; then
-  usage
-fi
+[[ $# -lt 1 ]] && usage
 
 REGION_KEY="$1"
 TITLES_ONLY=false
-if [[ "${2:-}" == "--titles-only" ]]; then
-  TITLES_ONLY=true
-fi
+[[ "${2:-}" == "--titles-only" ]] && TITLES_ONLY=true
 
-# Fetch LayerData.js and extract layers for the given region
-RAW=$(curl -fsSL "$LAYERDATA_URL")
+python3 - "$REGION_KEY" "$TITLES_ONLY" "$LAYERDATA_URL" << 'EOF'
+import sys, re, urllib.request
 
-# Find the block for the region and extract title/file pairs
-REGION_BLOCK=$(echo "$RAW" | awk "/['\"]${REGION_KEY}['\"]/{found=1} found{print} found && /\]/{exit}")
+region_key  = sys.argv[1]
+titles_only = sys.argv[2] == "true"
+url         = sys.argv[3]
 
-if [[ -z "$REGION_BLOCK" ]]; then
-  echo "No layers found for region: $REGION_KEY" >&2
-  exit 1
-fi
+with urllib.request.urlopen(url) as r:
+    data = r.read().decode()
 
-# Parse title and file from each layer entry
-echo "$REGION_BLOCK" | awk '
-  /title:/ { match($0, /title:[[:space:]]*['"'"'"]([^'"'"'"]+)['"'"'"]/, arr); title=arr[1] }
-  /file:/  { match($0, /file:[[:space:]]*['"'"'"]([^'"'"'"]+)['"'"'"]/, arr);
-              file=arr[1];
-              if (title != "") {
-                if (TITLES_ONLY == "true") print title
-                else printf "%-40s %s\n", title, file
-                title=""
-              }
-            }
-' TITLES_ONLY="$TITLES_ONLY"
+# Find the JS array block for this region
+pattern = r"""['"]{0,1}""" + re.escape(region_key) + r"""['"]{0,1}\s*:\s*\[(.*?)\]"""
+m = re.search(pattern, data, re.DOTALL)
+if not m:
+    print(f"No layers found for region: {region_key}", file=sys.stderr)
+    sys.exit(1)
+
+block  = m.group(1)
+titles = re.findall(r"""title\s*:\s*['"]([^'"]+)['"]""", block)
+files  = re.findall(r"""file\s*:\s*['"]([^'"]+)['"]""", block)
+
+if not titles:
+    print(f"No layers parsed for region: {region_key}", file=sys.stderr)
+    sys.exit(1)
+
+for t, f in zip(titles, files):
+    if titles_only:
+        print(t)
+    else:
+        print(f"{t:<40} {f}")
+EOF

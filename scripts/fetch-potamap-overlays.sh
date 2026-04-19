@@ -22,68 +22,72 @@ usage() {
   exit 1
 }
 
-if [[ $# -lt 1 ]]; then
-  usage
-fi
+[[ $# -lt 1 ]] && usage
 
 REGION_KEY="$1"
-TITLE_FILTER="${2:-}"
-# Strip leading -- from filter if accidentally passed as flag
-[[ "$TITLE_FILTER" == --* ]] && TITLE_FILTER=""
+shift
+
+# Second positional arg (if not a flag) is the title filter
+TITLE_FILTER=""
+if [[ $# -gt 0 && "${1}" != --* ]]; then
+  TITLE_FILTER="$1"
+  shift
+fi
 
 OUT_DIR="overlays/${REGION_KEY}"
 DRY_RUN=false
 SIMPLIFY_PCT=""
 
-shift; [[ $# -ge 1 && "$1" != --* ]] && { shift || true; }   # consumed filter above
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --out-dir)   OUT_DIR="$2"; shift 2 ;;
-    --dry-run)   DRY_RUN=true; shift ;;
+    --out-dir)   OUT_DIR="$2";    shift 2 ;;
+    --dry-run)   DRY_RUN=true;    shift   ;;
     --simplify)  SIMPLIFY_PCT="$2"; shift 2 ;;
     *) echo "Unknown option: $1" >&2; usage ;;
   esac
 done
 
-RAW=$(curl -fsSL "$LAYERDATA_URL")
+# Use Python to fetch and parse LayerData.js
+PAIRS=$(python3 - "$REGION_KEY" "$TITLE_FILTER" "$LAYERDATA_URL" << 'EOF'
+import sys, re, urllib.request
 
-REGION_BLOCK=$(echo "$RAW" | awk "/['\"]${REGION_KEY}['\"]/{found=1} found{print} found && /\]/{exit}")
+region_key   = sys.argv[1]
+title_filter = sys.argv[2]   # may be empty
+url          = sys.argv[3]
 
-if [[ -z "$REGION_BLOCK" ]]; then
-  echo "No layers found for region: $REGION_KEY" >&2
-  exit 1
-fi
+with urllib.request.urlopen(url) as r:
+    data = r.read().decode()
 
-# Parse pairs
-PAIRS=$(echo "$REGION_BLOCK" | awk '
-  /title:/ { match($0, /title:[[:space:]]*['"'"'"]([^'"'"'"]+)['"'"'"]/, arr); title=arr[1] }
-  /file:/  { match($0, /file:[[:space:]]*['"'"'"]([^'"'"'"]+)['"'"'"]/, arr);
-              file=arr[1];
-              if (title != "") { print title "\t" file; title="" }
-            }
-')
+pattern = r"""['"]{0,1}""" + re.escape(region_key) + r"""['"]{0,1}\s*:\s*\[(.*?)\]"""
+m = re.search(pattern, data, re.DOTALL)
+if not m:
+    print(f"No layers found for region: {region_key}", file=sys.stderr)
+    sys.exit(1)
+
+block  = m.group(1)
+titles = re.findall(r"""title\s*:\s*['"]([^'"]+)['"]""", block)
+files  = re.findall(r"""file\s*:\s*['"]([^'"]+)['"]""", block)
+
+for t, f in zip(titles, files):
+    if title_filter:
+        if not re.search(title_filter, t, re.IGNORECASE):
+            continue
+    print(f"{t}\t{f}")
+EOF
+)
 
 if [[ -z "$PAIRS" ]]; then
-  echo "No layers parsed for region: $REGION_KEY" >&2
+  echo "No layers matched for region: $REGION_KEY (filter: '${TITLE_FILTER}')" >&2
   exit 1
 fi
 
 if ! $DRY_RUN; then
   mkdir -p "$OUT_DIR"
-fi
-
-MANIFEST_FILE="${OUT_DIR}/manifest.tsv"
-if ! $DRY_RUN; then
-  echo -e "title\tfile\turl\toutput" > "$MANIFEST_FILE"
+  echo "title\tfile\turl\toutput" > "${OUT_DIR}/manifest.tsv"
 fi
 
 while IFS=$'\t' read -r title rel_file; do
-  # Skip if filter is set and title doesn't match
-  if [[ -n "$TITLE_FILTER" ]] && ! echo "$title" | grep -qiE "$TITLE_FILTER"; then
-    continue
-  fi
-
-  # Build raw URL — regional files live under data/<REGION>/, shared files under data/
+  # Build raw URL — files with a path separator are already relative to repo root
   if echo "$rel_file" | grep -q "/"; then
     raw_url="${RAW_BASE_URL}/${rel_file}"
   else
@@ -98,9 +102,7 @@ while IFS=$'\t' read -r title rel_file; do
   echo "          url:  $raw_url"
   echo "          dest: $out_path"
 
-  if $DRY_RUN; then
-    continue
-  fi
+  if $DRY_RUN; then continue; fi
 
   if curl -fsSL "$raw_url" -o "$out_path" 2>/dev/null; then
     echo "          ✓ downloaded"
@@ -118,11 +120,11 @@ while IFS=$'\t' read -r title rel_file; do
     fi
   fi
 
-  echo -e "${title}\t${rel_file}\t${raw_url}\t${safe_name}" >> "$MANIFEST_FILE"
+  printf "%s\t%s\t%s\t%s\n" "$title" "$rel_file" "$raw_url" "$safe_name" >> "${OUT_DIR}/manifest.tsv"
 done <<< "$PAIRS"
 
 if ! $DRY_RUN; then
   echo ""
   echo "Overlays saved to: $OUT_DIR"
-  echo "Manifest:          $MANIFEST_FILE"
+  echo "Manifest:          ${OUT_DIR}/manifest.tsv"
 fi

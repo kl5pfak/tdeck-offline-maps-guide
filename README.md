@@ -5,6 +5,7 @@
   <img alt="UI" src="https://img.shields.io/badge/ui-MUI-orange">
   <img alt="Region" src="https://img.shields.io/badge/tested-Alaska%20%2B%20Lower%2048-purple">
   <img alt="Status" src="https://img.shields.io/badge/status-working-brightgreen">
+  <img alt="Changelog" src="https://img.shields.io/badge/changelog-v1.2.0-informational">
 </p>
 
 <p align="center">
@@ -31,10 +32,36 @@ git clone https://github.com/JustDr00py/tdeck-maps ~/tdeck-maps
 
 2. Add your Thunderforest API key inside meshtastic_tiles.py in get_tile_url().
 
-3. Run:
-   ./build.sh
+3. Run one of the build scripts:
+
+```bash
+./build-ak.sh
+./build-anchorage.sh
+./build-charleston.sh
+./build-core.sh "City, State" 4 10 terrain
+./build-ak-full.sh
+```
 
 4. Insert SD card → reboot → open Maps in MUI
+
+## ✅ Shell Quality Checks
+
+Run lint and tests before sharing changes:
+
+```bash
+scripts/lint-shell.sh
+scripts/test-shell.sh
+```
+
+If tools are missing:
+
+```bash
+# Ubuntu/Debian
+sudo apt-get update && sudo apt-get install -y shellcheck bats
+
+# macOS (Homebrew)
+brew install shellcheck bats-core
+```
 
 ⸻
 
@@ -72,11 +99,25 @@ If this structure is wrong, maps will NOT load.
 🔧 Example Usage
 
 Fairbanks
-./build.sh "Fairbanks, Alaska"
+```bash
+./build-ak.sh
+```
+
+Anchorage
+```bash
+./build-anchorage.sh
+```
 
 Charleston
-./build.sh "Charleston, South Carolina" 4 10 terrain TDECK-AK
-./build.sh "Charleston, South Carolina" 4 10 terrain TDECK-AK
+```bash
+./build-charleston.sh
+```
+
+Custom city with explicit card label or mount path
+```bash
+./build-core.sh "Charleston, South Carolina" 4 10 terrain TDECK-AK
+./build-core.sh "Charleston, South Carolina" 4 10 terrain /Volumes/TDECK-AK
+```
 
 🚨 If your map is blank
 
@@ -111,3 +152,9 @@ cp -R /Volumes/TDECK*/maps ~/tdeck-map-backup
 - LilyGO T-Deck
 - JustDr00py/tdeck-maps
 - Community testing and debugging
+
+---
+
+## 📋 Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for full version history.

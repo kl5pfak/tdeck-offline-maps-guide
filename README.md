@@ -5,7 +5,7 @@
   <img alt="UI" src="https://img.shields.io/badge/ui-MUI-orange">
   <img alt="Region" src="https://img.shields.io/badge/tested-Alaska%20%2B%20Lower%2048-purple">
   <img alt="Status" src="https://img.shields.io/badge/status-working-brightgreen">
-  <img alt="Changelog" src="https://img.shields.io/badge/changelog-v1.2.0-informational">
+  <img alt="Changelog" src="https://img.shields.io/badge/changelog-v1.3.0-informational">
 </p>
 
 <p align="center">
@@ -77,7 +77,7 @@ def get_tile_url(self, x, y, zoom, source="osm"):
 ```bash
 # Format: build-overlay.sh "City, State" overlay_source [base_zoom_start] [base_zoom_end] [overlay_zoom_end] [base_source] [card_label]
 ./build-overlay.sh "Anchorage, Alaska" cycle
-./build-overlay.sh "Fairbanks, Alaska" transport 6 7 13 terrain TDECK-AK
+./build-overlay.sh "Fairbanks, Alaska" cycle 6 7 13 terrain TDECK-AK
 ```
 
 **Vector overlays from potamap (GeoJSON for parks, peaks, etc.):**
@@ -169,11 +169,11 @@ Map overlay (user-specified source layered over terrain base)
 # terrain base (zoom 4–7) + cycle overlay (zoom 8–12)
 ./build-overlay.sh "Anchorage, Alaska" cycle
 
-# terrain base + outdoors overlay with custom zoom split
-./build-overlay.sh "Fairbanks, Alaska" outdoors 7 8 13
+# terrain base + cycle overlay with custom zoom split
+./build-overlay.sh "Fairbanks, Alaska" cycle 7 8 13
 
-# terrain base + transport overlay for a city, explicit card mount
-./build-overlay.sh "Denver, Colorado" transport 6 7 12 terrain TDECK-AK
+# terrain base + cycle overlay for a city, explicit card mount
+./build-overlay.sh "Denver, Colorado" cycle 6 7 12 terrain TDECK-AK
 ```
 
 Available sources for `--source` (supported by `meshtastic_tiles.py`):
@@ -223,6 +223,15 @@ scripts/copy-overlay-bundle.sh US-SC TDECK-SC
 ```
 
 Tip: keep overlay bundles separated by region (US-AK, US-SC, etc.) and copy only the region you are actively testing.
+
+## 🗺️ Version Guide
+
+| Version | Status | Notes |
+|---|---|---|
+| v1.2.0 | Current | Core map builds, SD copy flow, shell checks, and raster overlays using supported sources (`terrain`, `osm`, `satellite`, `cycle`). |
+| v1.3.0 (planned) | Pending | POTA/vector overlay integration in-device is still pending. Scripts can fetch/copy GeoJSON bundles, but MUI rendering/selection is not complete yet. |
+
+POTA is currently a pending feature for end-user map display. Use raster tile workflows for reliable on-device map results today.
 
 🚨 If your map is blank
 

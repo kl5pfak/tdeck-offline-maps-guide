@@ -6,6 +6,26 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [1.3.0] - 2026-04-19
+
+### Added
+- `build-overlay.sh` added to repository for layered raster tile builds
+- Potamap helper scripts added:
+	- `scripts/list-potamap-region-layers.sh`
+	- `scripts/fetch-potamap-overlays.sh`
+	- `scripts/copy-overlay-bundle.sh`
+	- `scripts/list-sd-overlay-bundles.sh`
+- README version guide clarifying current support status and planned features
+
+### Changed
+- Potamap parsing updated to use Python in helper scripts for macOS compatibility
+- README corrected to list only currently supported `meshtastic_tiles.py` sources (`terrain`, `osm`, `satellite`, `cycle`)
+
+### Notes
+- POTA/vector overlay rendering in-device remains a pending feature
+
+---
+
 ## [1.2.0] - 2026-04-19
 
 ### Added

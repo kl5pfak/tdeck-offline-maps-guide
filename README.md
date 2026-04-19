@@ -24,25 +24,70 @@
 
 ## 🚀 Quick Start
 
-1. Clone the tile generator:
+1. Clone this repository (the build scripts):
+
+```bash
+git clone https://github.com/kl5pfak/tdeck-offline-maps-guide ~/tdeck-maps-guide
+cd ~/tdeck-maps-guide
+```
+
+2. Clone the tile generator and install its dependencies:
 
 ```bash
 git clone https://github.com/JustDr00py/tdeck-maps ~/tdeck-maps
+pip3 install requests Pillow
 ```
 
-2. Add your Thunderforest API key inside meshtastic_tiles.py in get_tile_url().
+3. Configure map source access in `~/tdeck-maps/meshtastic_tiles.py` (`get_tile_url()`).
 
-3. Run one of the build scripts:
+  You only need a Thunderforest API key if you use Thunderforest-backed sources (for example `cycle`, and any custom Thunderforest URLs you add).
+  Default sources like `terrain`, `osm`, and `satellite` work without a Thunderforest key.
 
+   Example (`cycle` with API key):
+
+```python
+def get_tile_url(self, x, y, zoom, source="osm"):
+  thunderforest_key = "YOUR_THUNDERFOREST_API_KEY"
+  sources = {
+    "osm": f"https://tile.openstreetmap.org/{zoom}/{x}/{y}.png",
+    "satellite": f"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{zoom}/{y}/{x}",
+    "terrain": f"https://tile.opentopomap.org/{zoom}/{x}/{y}.png",
+    "cycle": f"https://tile.thunderforest.com/cycle/{zoom}/{x}/{y}.png?apikey={thunderforest_key}",
+  }
+  return sources.get(source, sources["osm"])
+```
+
+4. Run one of the build scripts:
+
+**Quick & Easy (pre-configured regions):**
 ```bash
-./build-ak.sh
-./build-anchorage.sh
-./build-charleston.sh
-./build-core.sh "City, State" 4 10 terrain
-./build-ak-full.sh
+./build-anchorage.sh              # Downloads Anchorage area (zoom 4-10)
+./build-ak.sh                     # Downloads Fairbanks area (zoom 4-10)
+./build-charleston.sh             # Downloads Charleston area (zoom 4-10)
 ```
 
-4. Insert SD card → reboot → open Maps in MUI
+**Custom city (you specify location, zoom, source):**
+```bash
+# Format: build-core.sh "City, State" min_zoom max_zoom source [card_label]
+./build-core.sh "Denver, Colorado" 4 10 terrain
+./build-core.sh "Seattle, Washington" 4 12 satellite TDECK-AK
+```
+
+**Overlays (layered maps with Thunderforest source):**
+```bash
+# Format: build-overlay.sh "City, State" overlay_source [base_zoom_start] [base_zoom_end] [overlay_zoom_end] [base_source] [card_label]
+./build-overlay.sh "Anchorage, Alaska" cycle
+./build-overlay.sh "Fairbanks, Alaska" transport 6 7 13 terrain TDECK-AK
+```
+
+**Vector overlays from potamap (GeoJSON for parks, peaks, etc.):**
+```bash
+scripts/list-potamap-region-layers.sh US-AK --titles-only
+scripts/fetch-potamap-overlays.sh US-AK 'Parks|Counties'
+scripts/copy-overlay-bundle.sh US-AK TDECK-AK
+```
+
+5. Insert SD card → reboot → open Maps in MUI
 
 ## ✅ Shell Quality Checks
 
@@ -118,6 +163,66 @@ Custom city with explicit card label or mount path
 ./build-core.sh "Charleston, South Carolina" 4 10 terrain TDECK-AK
 ./build-core.sh "Charleston, South Carolina" 4 10 terrain /Volumes/TDECK-AK
 ```
+
+Map overlay (user-specified source layered over terrain base)
+```bash
+# terrain base (zoom 4–7) + cycle overlay (zoom 8–12)
+./build-overlay.sh "Anchorage, Alaska" cycle
+
+# terrain base + outdoors overlay with custom zoom split
+./build-overlay.sh "Fairbanks, Alaska" outdoors 7 8 13
+
+# terrain base + transport overlay for a city, explicit card mount
+./build-overlay.sh "Denver, Colorado" transport 6 7 12 terrain TDECK-AK
+```
+
+Available sources for `--source` (supported by `meshtastic_tiles.py`):
+
+| Source | Type | Best for |
+|---|---|---|
+| `terrain` | Free | Topographic overview (default base) |
+| `osm` | Free | Standard OpenStreetMap street map |
+| `satellite` | Free | Aerial/satellite imagery |
+| `cycle` | Thunderforest key required | Bike routes, trails, road detail |
+
+> **Note:** `outdoors`, `transport`, and other Thunderforest styles are not built into `meshtastic_tiles.py`. To add them, add entries to the `sources` dict in `get_tile_url()` following the `cycle` URL pattern in step 3 above.
+
+Region overlays from potamap (GeoJSON)
+
+Alaska overlay bundle workflow
+```bash
+# list layer titles/files for a region
+scripts/list-potamap-region-layers.sh US-AK
+
+# list only titles
+scripts/list-potamap-region-layers.sh US-AK --titles-only
+
+# download selected Alaska overlays to overlays/US-AK
+scripts/fetch-potamap-overlays.sh US-AK 'Parks|Counties'
+
+# preview only, do not download
+scripts/fetch-potamap-overlays.sh US-AK 'Parks|Counties' --dry-run
+
+# simplify downloaded overlays (requires mapshaper)
+scripts/fetch-potamap-overlays.sh US-AK 'Parks|Counties' --simplify 30
+
+# copy a bundle to SD card for end-user selection/storage
+scripts/copy-overlay-bundle.sh US-AK
+scripts/copy-overlay-bundle.sh overlays/US-AK TDECK-AK
+
+# list overlay bundles currently on SD card
+scripts/list-sd-overlay-bundles.sh
+scripts/list-sd-overlay-bundles.sh TDECK-AK
+```
+
+South Carolina overlay bundle workflow
+```bash
+scripts/list-potamap-region-layers.sh US-SC
+scripts/fetch-potamap-overlays.sh US-SC 'Parks|Summits'
+scripts/copy-overlay-bundle.sh US-SC TDECK-SC
+```
+
+Tip: keep overlay bundles separated by region (US-AK, US-SC, etc.) and copy only the region you are actively testing.
 
 🚨 If your map is blank
 

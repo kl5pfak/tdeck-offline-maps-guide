@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>T-Deck Offline Maps</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --panel: #161b22;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --accent-2: #1f6feb;
+      --good: #3fb950;
+      --warn: #d29922;
+      --maxw: 980px;
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0,0,0,.25);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.65;
+    }
+
+    body {
+      padding: 32px 20px 64px;
+    }
+
+    .container {
+      max-width: var(--maxw);
+      margin: 0 auto;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 40px 24px 28px;
+      background: linear-gradient(180deg, rgba(88,166,255,0.12), rgba(88,166,255,0.03));
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .logo {
+      width: 110px;
+      max-width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 2.4rem;
+      line-height: 1.15;
+      color: #ffffff;
+    }
+
+    .tagline {
+      font-size: 1.15rem;
+      color: var(--text);
+      margin: 0 0 10px;
+    }
+
+    .subline {
+      color: var(--muted);
+      margin: 0 auto;
+      max-width: 700px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 10px 16px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      transition: transform .15s ease, background .15s ease, border-color .15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: var(--accent-2);
+      color: #fff;
+      border-color: var(--accent-2);
+    }
+
+    .btn-secondary {
+      background: var(--panel);
+      color: var(--text);
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+      margin-top: 22px;
+    }
+
+    .grid-2 {
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .card h2, .card h3 {
+      margin-top: 0;
+      color: #ffffff;
+    }
+
+    .card p:last-child,
+    .card ul:last-child {
+      margin-bottom: 0;
+    }
+
+    .section {
+      margin-top: 22px;
+    }
+
+    .section-title {
+      margin: 0 0 12px;
+      font-size: 1.35rem;
+      color: #ffffff;
+    }
+
+    .status-list,
+    .feature-list,
+    .simple-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .status-list li,
+    .feature-list li,
+    .simple-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .status-list li:last-child,
+    .feature-list li:last-child,
+    .simple-list li:last-child {
+      border-bottom: 0;
+    }
+
+    .kicker {
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: .78rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    pre {
+      background: #0b1016;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      overflow-x: auto;
+      margin: 12px 0 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    code, pre {
+      color: var(--text);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: .95rem;
+    }
+
+    .note {
+      margin-top: 12px;
+      color: var(--muted);
+    }
+
+    .mini {
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .good { color: var(--good); }
+    .warn { color: var(--warn); }
+
+    a {
+      color: var(--accent);
+    }
+
+    .footer-cta {
+      text-align: center;
+      padding: 28px 20px;
+    }
+
+    @media (max-width: 640px) {
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      body {
+        padding: 20px 14px 48px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <section class="hero">
+      <img src="assets/logo.png" alt="T-Deck Offline Maps logo" class="logo">
+
+      <h1>T-Deck Offline Maps</h1>
+      <p class="tagline">Generate offline maps for the T-Deck in minutes.</p>
+      <p class="subline">
+        Fully offline on the device. No internet required in the field.
+        Field-tested on real hardware in Alaska and the Lower 48.
+      </p>
+
+      <div class="badge-row">
+        <span class="badge">Offline builds: working</span>
+        <span class="badge">SD workflow: working</span>
+        <span class="badge">Regional scripts: working</span>
+        <span class="badge">Overlays: in progress</span>
+      </div>
+
+      <div class="button-row">
+        <a class="btn btn-primary" href="#get-a-working-map-fast">Get Started</a>
+        <a class="btn btn-secondary" href="https://github.com/kl5pfak/tdeck-offline-maps-guide/wiki">Open Wiki</a>
+      </div>
+    </section>
+
+    <section class="grid grid-2 section">
+      <div class="card">
+        <div class="kicker">What this does</div>
+        <h2 class="section-title">Built for field use</h2>
+        <ul class="feature-list">
+          <li>Builds offline map tiles for the T-Deck</li>
+          <li>Loads maps from SD card using Meshtastic MUI</li>
+          <li>Works fully offline on the device</li>
+          <li>Fast regional builds</li>
+          <li>Overlay support (POTA / GeoJSON) — scripts available, device rendering in progress</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="kicker">Before you start</div>
+        <h2 class="section-title">Quick checklist</h2>
+        <ul class="simple-list">
+          <li>T-Deck running Meshtastic with MUI</li>
+          <li>SD card inserted and available</li>
+          <li>Python 3 installed</li>
+          <li>Internet available for tile downloads only</li>
+          <li>Basic command line usage</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="card section" id="get-a-working-map-fast">
+      <div class="kicker">Fast path</div>
+      <h2 class="section-title">Get a Working Map Fast</h2>
+      <p>Run this to build a ready-to-use offline map:</p>
+
+<pre>git clone https://github.com/kl5pfak/tdeck-offline-maps-guide
+cd tdeck-maps-guide
+
+git clone https://github.com/JustDr00py/tdeck-maps ~/tdeck-maps
+pip3 install requests Pillow
+
+./build-ak.sh</pre>
+
+      <p class="note">Then insert the SD card, reboot, and open Maps (MUI).</p>
+    </section>
+
+    <section class="grid grid-2 section">
+      <div class="card">
+        <div class="kicker">Build maps</div>
+        <h2 class="section-title">Quick builds</h2>
+<pre>./build-ak.sh
+./build-anchorage.sh
+./build-charleston.sh</pre>
+        <p class="mini">Builds can take several minutes depending on region and zoom level.</p>
+      </div>
+
+      <div class="card">
+        <div class="kicker">Custom region</div>
+        <h2 class="section-title">Start from your own location</h2>
+<pre>./build-core.sh "Denver, Colorado" 4 10 terrain</pre>
+        <p class="mini">Use custom builds when you want a smaller region or different map source.</p>
+      </div>
+    </section>
+
+    <section class="grid grid-2 section">
+      <div class="card">
+        <div class="kicker">Load maps</div>
+        <h2 class="section-title">Copy to SD card</h2>
+        <ul class="simple-list">
+          <li>Copy files to <code>/maps/osm/</code></li>
+          <li>Insert SD card</li>
+          <li>Reboot the device</li>
+          <li>Open Maps in MUI</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="kicker">Required layout</div>
+        <h2 class="section-title">SD card structure</h2>
+<pre>/maps/osm/
+├── 4/
+├── 5/
+├── 6/
+├── 7/
+├── 8/
+├── 9/
+└── 10/</pre>
+      </div>
+    </section>
+
+    <section class="grid grid-2 section">
+      <div class="card">
+        <div class="kicker">System status</div>
+        <h2 class="section-title">Current project state</h2>
+        <ul class="status-list">
+          <li><span class="good">Offline map builds: working</span></li>
+          <li><span class="good">SD card workflow: working</span></li>
+          <li><span class="good">Regional build scripts: working</span></li>
+          <li><span class="warn">Overlay support: scripts available, rendering in progress</span></li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="kicker">Alaska strategy</div>
+        <h2 class="section-title">Recommended starting point</h2>
+        <ul class="simple-list">
+          <li>Zoom 4–7 → statewide base</li>
+          <li>Zoom 6–12 → local detail</li>
+          <li>Split large areas into regions</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="grid grid-2 section">
+      <div class="card">
+        <div class="kicker">Common problems</div>
+        <h2 class="section-title">Quick troubleshooting</h2>
+        <ul class="simple-list">
+          <li>Missing zoom 4–6 → map will NOT load</li>
+          <li>Wrong path → must be <code>/maps/osm/</code></li>
+          <li>Partial copy → incomplete map</li>
+          <li>Zoomed in → appears blank</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="kicker">Advanced setup</div>
+        <h2 class="section-title">Need more control?</h2>
+        <p>For custom regions, overlays, and advanced workflows, use the project Wiki.</p>
+        <div class="button-row" style="justify-content:flex-start; margin-top:16px;">
+          <a class="btn btn-secondary" href="https://github.com/kl5pfak/tdeck-offline-maps-guide/wiki">Open Advanced Setup</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="card section footer-cta">
+      <div class="kicker">Start here</div>
+      <h2 class="section-title">Recommended first command</h2>
+<pre>./build-ak.sh</pre>
+    </section>
+
+  </div>
+</body>
+</html>

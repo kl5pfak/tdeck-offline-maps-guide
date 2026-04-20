@@ -6,6 +6,31 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [1.3.1] - 2026-04-20
+
+### Changed
+- README was trimmed to a quick-start format focused on first-run success
+- README now links to wiki documentation sections instead of embedding all deep-reference content
+- Section formatting in README was cleaned up for better GitHub rendering
+
+### Added
+- `wiki-drafts/` pages added for manual wiki publishing:
+	- `Home.md`
+	- `Setup-Guide.md`
+	- `Build-Guide.md`
+	- `SD-Card-Setup.md`
+	- `Overlay-Maps-(POTA---GeoJSON).md`
+	- `Map-Sources.md`
+	- `Troubleshooting.md`
+	- `Alaska-Strategy.md`
+	- `Development---Testing.md`
+- README "Full Documentation" links for wiki navigation
+
+### Notes
+- POTA/vector overlay rendering in-device remains a pending feature
+
+---
+
 ## [1.3.0] - 2026-04-19
 
 ### Added

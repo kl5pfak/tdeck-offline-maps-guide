@@ -9,11 +9,25 @@
 </p>
 
 <p align="center">
-  Simple guide to get offline maps working on the LilyGO T-Deck using Meshtastic MUI and an SD card.<br>
-  Field-tested in Alaska and the Lower 48.
+  Generate offline maps for the T-Deck in minutes.<br>
+  Fully offline on the device. Field-tested in Alaska and the Lower 48.
 </p>
 
 > New? Start here -> [Quick Start](#-quick-start)
+
+## Fast Path
+
+Run this to build a ready-to-use Fairbanks map:
+
+```bash
+git clone https://github.com/kl5pfak/tdeck-offline-maps-guide ~/tdeck-maps-guide
+cd ~/tdeck-maps-guide
+
+git clone https://github.com/JustDr00py/tdeck-maps ~/tdeck-maps
+pip3 install requests Pillow
+
+./build-fairbanks.sh
+```
 
 ---
 

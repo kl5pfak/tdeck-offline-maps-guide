@@ -41,37 +41,51 @@
     }
 
     .hero {
-      text-align: center;
-      padding: 48px 24px 36px;
-      background: linear-gradient(180deg, rgba(88,166,255,0.12), rgba(88,166,255,0.03));
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
+      padding: 3rem 1.5rem;
+      background:
+        radial-gradient(circle at 30% 50%, rgba(90,170,255,0.15), transparent 60%),
+        linear-gradient(180deg, #0b1220 0%, #05080f 100%);
+      border-bottom: 1px solid rgba(120,180,255,0.15);
     }
 
-    .logo {
-      width: 140px;
-      max-width: 100%;
-      margin-bottom: 16px;
-    }
-
-    .hero h1 {
-      margin: 0 0 10px;
-      font-size: 2.4rem;
-      line-height: 1.15;
-      color: #ffffff;
-    }
-
-    .tagline {
-      font-size: 1.15rem;
-      color: var(--text);
-      margin: 0 0 10px;
-    }
-
-    .subline {
-      color: var(--muted);
+    .hero-inner {
+      max-width: 1200px;
       margin: 0 auto;
-      max-width: 700px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-logo {
+      display: block;
+      width: min(420px, 45vw);
+      height: auto;
+      filter:
+        drop-shadow(0 0 8px rgba(90,170,255,0.35))
+        drop-shadow(0 0 22px rgba(90,170,255,0.18));
+      transition: transform 0.3s ease;
+    }
+
+    .hero-logo:hover {
+      transform: scale(1.03);
+    }
+
+    .hero-text {
+      max-width: 520px;
+    }
+
+    .hero-text h1 {
+      font-size: clamp(2.2rem, 3.5vw, 3.2rem);
+      margin-bottom: 0.5rem;
+      color: #e6f2ff;
+    }
+
+    .hero-text p {
+      font-size: 1.1rem;
+      color: #a8c4e0;
+      line-height: 1.6;
     }
 
     .button-row {
@@ -247,9 +261,14 @@
       padding: 28px 20px;
     }
 
-    @media (max-width: 640px) {
-      .hero h1 {
-        font-size: 2rem;
+    @media (max-width: 768px) {
+      .hero-inner {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .hero-logo {
+        width: 300px;
       }
 
       body {
@@ -266,25 +285,12 @@
   <div class="container">
 
     <section class="hero">
-      <img src="assets/logo.png" alt="T-Deck Offline Maps logo" class="logo">
-
-      <h1>T-Deck Offline Maps</h1>
-      <p class="tagline">Generate offline maps for the T-Deck in minutes.</p>
-      <p class="subline">
-        Fully offline on the device. No internet required in the field.
-        Field-tested on real hardware in Alaska and the Lower 48.
-      </p>
-
-      <div class="badge-row">
-        <span class="badge">Offline builds: working</span>
-        <span class="badge">SD workflow: working</span>
-        <span class="badge">Regional scripts: working</span>
-        <span class="badge">Overlays: in progress</span>
-      </div>
-
-      <div class="button-row">
-        <a class="btn btn-primary" href="#get-a-working-map-fast">Get Started</a>
-        <a class="btn btn-secondary" href="https://github.com/kl5pfak/tdeck-offline-maps-guide/wiki">Open Wiki</a>
+      <div class="hero-inner">
+        <img src="assets/logo.png" alt="Logo" class="hero-logo">
+        <div class="hero-text">
+          <h1>T-Deck Offline Maps</h1>
+          <p>Generate offline maps for the T-Deck in minutes.</p>
+        </div>
       </div>
     </section>
 

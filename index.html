@@ -42,7 +42,7 @@
 
     .hero {
       text-align: center;
-      padding: 40px 24px 28px;
+      padding: 48px 24px 36px;
       background: linear-gradient(180deg, rgba(88,166,255,0.12), rgba(88,166,255,0.03));
       border: 1px solid var(--border);
       border-radius: 24px;
@@ -50,7 +50,7 @@
     }
 
     .logo {
-      width: 110px;
+      width: 140px;
       max-width: 100%;
       margin-bottom: 16px;
     }
@@ -197,6 +197,21 @@
       color: var(--muted);
     }
 
+    .copy-btn {
+      margin-top: 12px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--panel);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .copy-btn:hover {
+      border-color: var(--accent);
+    }
+
     .mini {
       color: var(--muted);
       font-size: .95rem;
@@ -304,13 +319,14 @@
       <h2 class="section-title">Get a Working Map Fast</h2>
       <p>Run this to build a ready-to-use offline map:</p>
 
-<pre>git clone https://github.com/kl5pfak/tdeck-offline-maps-guide
+<pre id="fast-path-code"><code>git clone https://github.com/kl5pfak/tdeck-offline-maps-guide
 cd tdeck-maps-guide
 
 git clone https://github.com/JustDr00py/tdeck-maps ~/tdeck-maps
 pip3 install requests Pillow
 
-./build-ak.sh</pre>
+./build-ak.sh</code></pre>
+      <button type="button" class="copy-btn" id="copy-fast-path">Copy Fast Path</button>
 
       <p class="note">Then insert the SD card, reboot, and open Maps (MUI).</p>
     </section>
@@ -319,16 +335,18 @@ pip3 install requests Pillow
       <div class="card">
         <div class="kicker">Build maps</div>
         <h2 class="section-title">Quick builds</h2>
-<pre>./build-ak.sh
+<pre id="quick-builds-code"><code>./build-ak.sh
 ./build-anchorage.sh
-./build-charleston.sh</pre>
+./build-charleston.sh</code></pre>
+        <button type="button" class="copy-btn" id="copy-quick-builds">Copy Quick Builds</button>
         <p class="mini">Builds can take several minutes depending on region and zoom level.</p>
       </div>
 
       <div class="card">
         <div class="kicker">Custom region</div>
         <h2 class="section-title">Start from your own location</h2>
-<pre>./build-core.sh "Denver, Colorado" 4 10 terrain</pre>
+<pre id="custom-region-code"><code>./build-core.sh "Denver, Colorado" 4 10 terrain</code></pre>
+        <button type="button" class="copy-btn" id="copy-custom-region">Copy Custom Region</button>
         <p class="mini">Use custom builds when you want a smaller region or different map source.</p>
       </div>
     </section>
@@ -407,9 +425,38 @@ pip3 install requests Pillow
     <section class="card section footer-cta">
       <div class="kicker">Start here</div>
       <h2 class="section-title">Recommended first command</h2>
-<pre>./build-ak.sh</pre>
+<pre id="first-command-code"><code>./build-ak.sh</code></pre>
+      <button type="button" class="copy-btn" id="copy-first-command">Copy First Command</button>
     </section>
 
   </div>
+
+  <script>
+    function wireCopyButton(buttonId, codeId, defaultLabel) {
+      const button = document.getElementById(buttonId);
+      const code = document.getElementById(codeId);
+
+      if (!button || !code) {
+        return;
+      }
+
+      button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.innerText.trim());
+          button.textContent = "Copied";
+          setTimeout(() => {
+            button.textContent = defaultLabel;
+          }, 1500);
+        } catch (error) {
+          button.textContent = "Copy failed";
+        }
+      });
+    }
+
+    wireCopyButton("copy-fast-path", "fast-path-code", "Copy Fast Path");
+    wireCopyButton("copy-quick-builds", "quick-builds-code", "Copy Quick Builds");
+    wireCopyButton("copy-custom-region", "custom-region-code", "Copy Custom Region");
+    wireCopyButton("copy-first-command", "first-command-code", "Copy First Command");
+  </script>
 </body>
 </html>

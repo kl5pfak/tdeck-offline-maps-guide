@@ -1,5 +1,5 @@
 <section class="card section">
-	<div class="kicker">Alaska strategy</div>
+	<div class="kicker">Alaska Strategy</div>
 	<h2 class="section-title">Layered Alaska Map Build</h2>
 	<p>
 		This page describes the recommended map build strategy for Alaska.
@@ -93,19 +93,20 @@
 <pre>#!/usr/bin/env bash
 set -euo pipefail
 
-if [ -d ".venv" ]; then
+if [[ -d ".venv" ]]; then
 	source .venv/bin/activate
 fi
 
 CARD_TARGET="${1:-TDECK-AK}"
 BASE_SOURCE="${2:-terrain}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 run_build() {
 	local location="$1"
 	local min_zoom="$2"
 	local max_zoom="$3"
 
-	./build-core.sh "${location}" "${min_zoom}" "${max_zoom}" "${BASE_SOURCE}" "${CARD_TARGET}"
+	"${SCRIPT_DIR}/build-core.sh" "${location}" "${min_zoom}" "${max_zoom}" "${BASE_SOURCE}" "${CARD_TARGET}"
 }
 
 run_build "Alaska" 4 7

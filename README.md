@@ -109,6 +109,11 @@ Best setup:
 - Low zoom (4–7) → statewide Alaska base
 - High zoom (6–12) → Fairbanks / local detail
 
+One-command layered Alaska build:
+```bash
+./build-alaska.sh
+```
+
 For full strategy details, see the wiki page: [Alaska Strategy](https://github.com/kl5pfak/tdeck-offline-maps-guide/wiki/Alaska-Strategy)
 
 ## 📚 Full Documentation

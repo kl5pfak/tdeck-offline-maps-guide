@@ -1,5 +1,3 @@
-# Alaska Strategy
-
 <section class="card section">
 	<div class="kicker">Alaska strategy</div>
 	<h2 class="section-title">Layered Alaska Map Build</h2>

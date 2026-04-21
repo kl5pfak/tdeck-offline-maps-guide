@@ -6,7 +6,7 @@ Quick and easy (pre-configured regions):
 
 ```bash
 ./build-anchorage.sh              # Anchorage area (zoom 4-10)
-./build-ak.sh                     # Fairbanks area (zoom 4-10)
+./build-fairbanks.sh              # Fairbanks area (zoom 4-10)
 ./build-charleston.sh             # Charleston area (zoom 4-10)
 ```
 
@@ -31,7 +31,7 @@ Overlay build:
 Fairbanks
 
 ```bash
-./build-ak.sh
+./build-fairbanks.sh
 ```
 
 Anchorage

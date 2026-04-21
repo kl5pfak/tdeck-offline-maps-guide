@@ -16,6 +16,6 @@ Use separate builds for:
 Example:
 
 ```bash
-./build-ak.sh
+./build-fairbanks.sh
 ./build-overlay.sh "Fairbanks, Alaska" cycle 7 8 13
 ```

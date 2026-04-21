@@ -8,7 +8,7 @@ fi
 
 shellcheck \
   build-core.sh \
-  build-ak.sh \
+  build-fairbanks.sh \
   build-ak-full.sh \
   build-charleston.sh \
   build-anchorage.sh

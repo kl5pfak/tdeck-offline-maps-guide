@@ -76,7 +76,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `IFS=$'\n\t'` word-splitting protection in `build-core.sh` and `build-ak-full.sh`
 
 ### Changed
-- `build-ak.sh` and `build-charleston.sh` use `SCRIPT_DIR` resolution so they work from any working directory
+- `build-fairbanks.sh` and `build-charleston.sh` use `SCRIPT_DIR` resolution so they work from any working directory
 - Eject logic in `build-core.sh` and `build-ak-full.sh` is now conditional — only runs on macOS with `diskutil`
 - Tile clearing now uses `find -exec rm` instead of glob expansion to avoid silent no-ops on empty dirs
 - `cp -R tiles/*` replaced with `cp -R tiles/.` to avoid glob failures on hidden files
@@ -93,7 +93,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 ### Added
 - Initial release
 - `build-core.sh` — parameterized tile builder using `meshtastic_tiles.py`
-- `build-ak.sh` — Fairbanks, Alaska build wrapper (zoom 4–12)
+- `build-fairbanks.sh` — Fairbanks, Alaska build wrapper (zoom 4–12)
+- Legacy AK alias wrapper that forwards to `build-fairbanks.sh`
 - `build-ak-full.sh` — full Alaska statewide low-res + Fairbanks high-res merged build
 - `build-charleston.sh` — Charleston, South Carolina build wrapper (zoom 4–10)
 - `README.md` with Quick Start, SD card layout, troubleshooting, and Alaska strategy guide

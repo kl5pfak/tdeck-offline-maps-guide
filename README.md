@@ -65,7 +65,7 @@ def get_tile_url(self, x, y, zoom, source="osm"):
 **Quick & Easy (pre-configured regions):**
 ```bash
 ./build-anchorage.sh              # Downloads Anchorage area (zoom 4-10)
-./build-ak.sh                     # Downloads Fairbanks area (zoom 4-10)
+./build-fairbanks.sh              # Downloads Fairbanks area (zoom 4-10)
 ./build-charleston.sh             # Downloads Charleston area (zoom 4-10)
 ```
 

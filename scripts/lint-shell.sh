@@ -10,6 +10,6 @@ shellcheck \
   build-core.sh \
   build-alaska.sh \
   build-fairbanks.sh \
-  build-ak-full.sh \
+  build-alaska-full.sh \
   build-charleston.sh \
   build-anchorage.sh

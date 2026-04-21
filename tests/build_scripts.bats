@@ -14,7 +14,7 @@ setup() {
   run grep -E '^#!/usr/bin/env bash$' "$REPO_ROOT/build-fairbanks.sh"
   [ "$status" -eq 0 ]
 
-  run grep -E '^#!/usr/bin/env bash$' "$REPO_ROOT/build-ak-full.sh"
+  run grep -E '^#!/usr/bin/env bash$' "$REPO_ROOT/build-alaska-full.sh"
   [ "$status" -eq 0 ]
 
   run grep -E '^#!/usr/bin/env bash$' "$REPO_ROOT/build-charleston.sh"
@@ -26,7 +26,7 @@ setup() {
     "$REPO_ROOT/build-core.sh" \
     "$REPO_ROOT/build-alaska.sh" \
     "$REPO_ROOT/build-fairbanks.sh" \
-    "$REPO_ROOT/build-ak-full.sh" \
+    "$REPO_ROOT/build-alaska-full.sh" \
     "$REPO_ROOT/build-charleston.sh"
   [ "$status" -eq 0 ]
 }

@@ -73,11 +73,11 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `rsync` support for tile copy with fallback to `cp` when rsync is unavailable
 - `sync` call after tile copy to flush writes before ejection
 - `TDECK_MAPS_DIR` environment variable override for custom repo paths
-- `IFS=$'\n\t'` word-splitting protection in `build-core.sh` and `build-ak-full.sh`
+- `IFS=$'\n\t'` word-splitting protection in `build-core.sh` and `build-alaska-full.sh`
 
 ### Changed
 - `build-fairbanks.sh` and `build-charleston.sh` use `SCRIPT_DIR` resolution so they work from any working directory
-- Eject logic in `build-core.sh` and `build-ak-full.sh` is now conditional — only runs on macOS with `diskutil`
+- Eject logic in `build-core.sh` and `build-alaska-full.sh` is now conditional — only runs on macOS with `diskutil`
 - Tile clearing now uses `find -exec rm` instead of glob expansion to avoid silent no-ops on empty dirs
 - `cp -R tiles/*` replaced with `cp -R tiles/.` to avoid glob failures on hidden files
 
@@ -95,7 +95,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - `build-core.sh` — parameterized tile builder using `meshtastic_tiles.py`
 - `build-fairbanks.sh` — Fairbanks, Alaska build wrapper (zoom 4–12)
 - Legacy AK alias wrapper that forwards to `build-fairbanks.sh`
-- `build-ak-full.sh` — full Alaska statewide low-res + Fairbanks high-res merged build
+- `build-alaska-full.sh` — full Alaska statewide low-res + Fairbanks high-res merged build
+- Legacy AK full alias wrapper that forwards to `build-alaska-full.sh`
 - `build-charleston.sh` — Charleston, South Carolina build wrapper (zoom 4–10)
 - `README.md` with Quick Start, SD card layout, troubleshooting, and Alaska strategy guide
 - Screenshots directory

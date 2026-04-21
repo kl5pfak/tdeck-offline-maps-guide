@@ -200,6 +200,14 @@
       word-break: break-word;
     }
 
+    pre.copyable {
+      cursor: pointer;
+    }
+
+    pre.copyable:hover {
+      border-color: var(--accent);
+    }
+
     code, pre {
       color: var(--text);
       font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
@@ -325,7 +333,7 @@
       <h2 class="section-title">Get a Working Map Fast</h2>
       <p>Run this to build a ready-to-use offline map:</p>
 
-<pre id="fast-path-code"><code>git clone https://github.com/kl5pfak/tdeck-offline-maps-guide
+<pre id="fast-path-code" class="copyable" title="Click to copy"><code>git clone https://github.com/kl5pfak/tdeck-offline-maps-guide
 cd tdeck-maps-guide
 
 git clone https://github.com/JustDr00py/tdeck-maps ~/tdeck-maps
@@ -341,7 +349,7 @@ pip3 install requests Pillow
       <div class="card">
         <div class="kicker">Build maps</div>
         <h2 class="section-title">Quick builds</h2>
-<pre id="quick-builds-code"><code>./build-ak.sh
+<pre id="quick-builds-code" class="copyable" title="Click to copy"><code>./build-ak.sh
 ./build-anchorage.sh
 ./build-charleston.sh</code></pre>
         <button type="button" class="copy-btn" id="copy-quick-builds">Copy Quick Builds</button>
@@ -351,7 +359,7 @@ pip3 install requests Pillow
       <div class="card">
         <div class="kicker">Custom region</div>
         <h2 class="section-title">Start from your own location</h2>
-<pre id="custom-region-code"><code>./build-core.sh "Denver, Colorado" 4 10 terrain</code></pre>
+<pre id="custom-region-code" class="copyable" title="Click to copy"><code>./build-core.sh "Denver, Colorado" 4 10 terrain</code></pre>
         <button type="button" class="copy-btn" id="copy-custom-region">Copy Custom Region</button>
         <p class="mini">Use custom builds when you want a smaller region or different map source.</p>
       </div>
@@ -431,7 +439,7 @@ pip3 install requests Pillow
     <section class="card section footer-cta">
       <div class="kicker">Start here</div>
       <h2 class="section-title">Recommended first command</h2>
-<pre id="first-command-code"><code>./build-ak.sh</code></pre>
+<pre id="first-command-code" class="copyable" title="Click to copy"><code>./build-ak.sh</code></pre>
       <button type="button" class="copy-btn" id="copy-first-command">Copy First Command</button>
     </section>
 
@@ -447,6 +455,18 @@ pip3 install requests Pillow
       }
 
       button.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(code.innerText.trim());
+          button.textContent = "Copied";
+          setTimeout(() => {
+            button.textContent = defaultLabel;
+          }, 1500);
+        } catch (error) {
+          button.textContent = "Copy failed";
+        }
+      });
+
+      code.addEventListener("click", async () => {
         try {
           await navigator.clipboard.writeText(code.innerText.trim());
           button.textContent = "Copied";

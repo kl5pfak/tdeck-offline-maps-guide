@@ -81,6 +81,7 @@ def get_tile_url(self, x, y, zoom, source="osm"):
 ./build-anchorage.sh              # Downloads Anchorage area (zoom 4-10)
 ./build-fairbanks.sh              # Downloads Fairbanks area (zoom 4-10)
 ./build-charleston.sh             # Downloads Charleston area (zoom 4-10)
+./build-south-florida.sh          # Downloads South Florida + Keys detail bundle
 ```
 
 **Custom city (you specify location, zoom, source):**
@@ -88,6 +89,18 @@ def get_tile_url(self, x, y, zoom, source="osm"):
 # Format: build-core.sh "City, State" min_zoom max_zoom source [card_label]
 ./build-core.sh "Denver, Colorado" 4 10 terrain
 ./build-core.sh "Seattle, Washington" 4 12 satellite TDECK-AK
+```
+
+**Custom region example (South Florida bundle on card label `TDECK-FL`):**
+```bash
+./build-core.sh "South Florida" 4 7 terrain TDECK-FL
+./build-core.sh "Port Saint Lucie, Florida" 7 11 terrain TDECK-FL
+./build-core.sh "Miami, Florida" 7 12 terrain TDECK-FL
+./build-core.sh "Key Largo, Florida" 8 13 terrain TDECK-FL
+./build-core.sh "Key West, Florida" 8 13 terrain TDECK-FL
+
+# Equivalent one-shot preset:
+./build-south-florida.sh
 ```
 
 **Overlays (layered maps with Thunderforest source):**

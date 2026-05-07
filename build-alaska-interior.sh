@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Alaska Interior — focused build for Fairbanks, Galena, Delta Junction, Tok
+# Alaska Interior build with statewide navigation coverage.
 # Uses usgs_topo by default for high-detail contour/topo maps.
-# Keeps zoom capped per city to control tile count and SD card space.
+# Includes a low-zoom Alaska base so it's easier to find interior tiles.
 #
 # Usage:
 #   ./build-alaska-interior.sh [card_label=TDECK-AK] [source=usgs_topo]
 #
 # Approximate tile counts per run:
-#   Fairbanks  zoom 4-10  ~300 tiles
-#   Galena     zoom 7-10  ~120 tiles
-#   Delta Jct  zoom 7-10  ~120 tiles
-#   Tok        zoom 7-10  ~120 tiles
+#   Alaska     zoom 3-8   ~400 tiles
+#   Fairbanks  zoom 4-11  ~450 tiles
+#   Galena     zoom 7-11  ~180 tiles
+#   Delta Jct  zoom 7-11  ~180 tiles
+#   Tok        zoom 7-11  ~180 tiles
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CARD_TARGET="${1:-TDECK-AK}"
@@ -26,7 +27,8 @@ run_build() {
   "$SCRIPT_DIR/build-core.sh" "$location" "$min_zoom" "$max_zoom" "$BASE_SOURCE" "$CARD_TARGET"
 }
 
-run_build "Fairbanks, Alaska"       4 10
-run_build "Galena, Alaska"          7 10
-run_build "Delta Junction, Alaska"  7 10
-run_build "Tok, Alaska"             7 10
+run_build "Alaska"                  3 8
+run_build "Fairbanks, Alaska"       4 11
+run_build "Galena, Alaska"          7 11
+run_build "Delta Junction, Alaska"  7 11
+run_build "Tok, Alaska"             7 11

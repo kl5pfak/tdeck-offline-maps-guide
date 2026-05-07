@@ -69,6 +69,7 @@ def get_tile_url(self, x, y, zoom, source="osm"):
     "osm": f"https://tile.openstreetmap.org/{zoom}/{x}/{y}.png",
     "satellite": f"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{zoom}/{y}/{x}",
     "terrain": f"https://tile.opentopomap.org/{zoom}/{x}/{y}.png",
+    "usgs_topo": f"https://basemap.nationalmap.gov/arcgis/rest/services/USGSTopo/MapServer/tile/{zoom}/{y}/{x}",
     "cycle": f"https://tile.thunderforest.com/cycle/{zoom}/{x}/{y}.png?apikey={thunderforest_key}",
   }
   return sources.get(source, sources["osm"])
@@ -133,7 +134,7 @@ Insert SD card -> reboot -> open Maps in MUI
 Do not build full Alaska at high zoom on a free tile API.
 
 Best setup:
-- Low zoom (4–7) → statewide Alaska base
+- Low zoom (3–7) → statewide Alaska base, including the default startup zoom
 - High zoom (6–12) → Fairbanks / local detail
 
 One-command layered Alaska build:

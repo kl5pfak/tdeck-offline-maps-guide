@@ -28,6 +28,9 @@ setup() {
 
   run grep -E '^#!/usr/bin/env bash$' "$REPO_ROOT/build-alaska-interior.sh"
   [ "$status" -eq 0 ]
+
+  run grep -E '^#!/usr/bin/env bash$' "$REPO_ROOT/build-world-base.sh"
+  [ "$status" -eq 0 ]
 }
 
 @test "all build scripts pass bash syntax check" {
@@ -39,7 +42,8 @@ setup() {
     "$REPO_ROOT/build-charleston.sh" \
     "$REPO_ROOT/build-south-florida.sh" \
     "$REPO_ROOT/build-usgs-topo.sh" \
-    "$REPO_ROOT/build-alaska-interior.sh"
+    "$REPO_ROOT/build-alaska-interior.sh" \
+    "$REPO_ROOT/build-world-base.sh"
   [ "$status" -eq 0 ]
 }
 

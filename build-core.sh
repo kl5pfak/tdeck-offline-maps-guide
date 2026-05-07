@@ -74,10 +74,10 @@ safe_clear_dir() {
 copy_tiles() {
   local from_dir="$1"
   local to_dir="$2"
+  # Merge tiles - no --delete so multi-step builds accumulate correctly
   if command -v rsync >/dev/null 2>&1; then
-    rsync -a --delete "$from_dir/" "$to_dir/"
+    rsync -a "$from_dir/" "$to_dir/"
   else
-    safe_clear_dir "$to_dir"
     cp -R "$from_dir/." "$to_dir/"
   fi
 }

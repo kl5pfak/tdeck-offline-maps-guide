@@ -44,10 +44,10 @@ copy_tiles() {
   local from_dir="$1"
   local to_dir="$2"
   mkdir -p "$to_dir"
+  # Merge - no --delete so world base and other regions are preserved
   if command -v rsync >/dev/null 2>&1; then
-    rsync -a --delete "$from_dir/" "$to_dir/"
+    rsync -a "$from_dir/" "$to_dir/"
   else
-    find "$to_dir" -mindepth 1 -maxdepth 1 -exec rm -rf -- {} +
     cp -R "$from_dir/." "$to_dir/"
   fi
 }
@@ -65,37 +65,42 @@ echo "Using SD card mount: $CARD_MOUNT"
 cd "$TDECK_MAPS_DIR"
 rm -rf tiles_low tiles_local tiles_merged
 
-echo "Building Alaska low-res base..."
-python3 meshtastic_tiles.py \
-  --coords \
-  --north 72 \
-  --south 51 \
-  --east -130 \
-  --west -180 \
-  --min-zoom 4 \
-  --max-zoom 7 \
-  --output-dir tiles_low \
-  --delay 0.5 \
-  --max-workers 2 \
-  --source terrain
-
-echo "Building Fairbanks high-res..."
-python3 meshtastic_tiles.py \
-  --city "Fairbanks, Alaska" \
-  --min-zoom 6 \
-  --max-zoom 12 \
-  --output-dir tiles_local \
-  --delay 0.5 \
-  --max-workers 2 \
-  --source terrain
-
-echo "Merging tiles..."
-mkdir -p tiles_merged
-cp -R tiles_low/. tiles_merged/
-cp -R tiles_local/. tiles_merged/
+build_region() {
+  local label="$1"; shift
+  echo "Building $label..."
+  python3 meshtastic_tiles.py "$@" \
+    --output-dir tiles_region \
+    --delay 0.5 \
+    --max-workers 2 \
+    --source terrain
+  copy_tiles "tiles_region" "$MAP_DIR"
+  rm -rf tiles_region
+}
 
 MAP_DIR="$CARD_MOUNT/maps/osm"
-copy_tiles "tiles_merged" "$MAP_DIR"
+mkdir -p "$MAP_DIR"
+rm -rf tiles_region
+
+# Statewide Alaska base — zoom 3-8 covers full state at startup
+build_region "Alaska statewide" \
+  --coords \
+  --north 72 --south 51 --east -130 --west -180 \
+  --min-zoom 3 --max-zoom 8
+
+# Interior cities — zoom 6-12 detail
+build_region "Fairbanks" --city "Fairbanks, Alaska" --min-zoom 6 --max-zoom 12
+build_region "Galena" --city "Galena, Alaska" --min-zoom 7 --max-zoom 11
+build_region "Delta Junction" --city "Delta Junction, Alaska" --min-zoom 7 --max-zoom 11
+build_region "Tok" --city "Tok, Alaska" --min-zoom 7 --max-zoom 11
+
+# Southcentral
+build_region "Anchorage" --city "Anchorage, Alaska" --min-zoom 6 --max-zoom 12
+build_region "Palmer" --city "Palmer, Alaska" --min-zoom 7 --max-zoom 11
+build_region "Wasilla" --city "Wasilla, Alaska" --min-zoom 7 --max-zoom 11
+
+# Western
+build_region "Nome" --city "Nome, Alaska" --min-zoom 7 --max-zoom 11
+build_region "Bethel" --city "Bethel, Alaska" --min-zoom 7 --max-zoom 11
 rm -f "$MAP_DIR/metadata.json"
 sync
 

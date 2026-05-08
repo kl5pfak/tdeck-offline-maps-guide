@@ -101,6 +101,16 @@ build_region "Wasilla" --city "Wasilla, Alaska" --min-zoom 7 --max-zoom 11
 # Western
 build_region "Nome" --city "Nome, Alaska" --min-zoom 7 --max-zoom 11
 build_region "Bethel" --city "Bethel, Alaska" --min-zoom 7 --max-zoom 11
+
+# World base tiles — ensures T-Deck renders at startup (0°N/0°W default view)
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ -f "$SCRIPT_DIR/build-world-base.sh" ]]; then
+  echo "Adding world base tiles (zoom 0-3)..."
+  bash "$SCRIPT_DIR/build-world-base.sh" "$CARD_MOUNT" osm
+else
+  echo "Warning: build-world-base.sh not found, skipping world base tiles"
+fi
+
 rm -f "$MAP_DIR/metadata.json"
 sync
 

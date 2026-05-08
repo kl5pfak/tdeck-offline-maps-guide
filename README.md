@@ -125,6 +125,7 @@ Insert SD card -> reboot -> open Maps in MUI
 ## ⚠️ Important
 
 - Maps must be in /maps/osm/
+- The project includes a default world fallback at zoom 1 so the map is never blank at startup
 - You must include zoom levels 4, 5, and 6
 - Public OSM tiles may return 403 errors
 - If the map is blank, zoom out first

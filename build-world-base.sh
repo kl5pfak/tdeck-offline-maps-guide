@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Downloads world base tiles at zoom 0-3 (85 tiles total, ~1 MB)
+# Downloads world base tiles at zoom 4-6 (336 tiles total, ~15 MB)
 # and merges them onto the SD card without overwriting existing tiles.
 #
 # Run this once after any build to ensure the T-Deck always has a
 # world map at startup (default view is around 0°N/0°W = London area).
+# Uses zoom 4-6 because Meshtastic firmware doesn't render zoom 0-3.
 #
 # Usage:
 #   ./build-world-base.sh [card_label=TDECK-AK] [source=terrain]
@@ -39,10 +40,10 @@ case "$SOURCE" in
   *)          die "Unsupported source: $SOURCE (use terrain, osm, satellite, usgs_topo)" ;;
 esac
 
-echo "Downloading world base tiles (zoom 0-3, ~85 tiles) from $SOURCE..."
+echo "Downloading world base tiles (zoom 4-6, ~336 tiles) from $SOURCE..."
 echo "Destination: $MAP_DIR"
 
-for z in 0 1 2 3; do
+for z in 4 5 6; do
   max=$(( (1 << z) - 1 ))
   for x in $(seq 0 $max); do
     mkdir -p "$MAP_DIR/$z/$x"

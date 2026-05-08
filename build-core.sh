@@ -93,6 +93,7 @@ MAX_ZOOM="${3:-10}"
 SOURCE="${4:-terrain}"
 CARD_NAME="${5:-}"
 TDECK_MAPS_DIR="${TDECK_MAPS_DIR:-$HOME/tdeck-maps}"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 [[ -n "$CITY" ]] || {
   usage
@@ -127,6 +128,14 @@ python3 meshtastic_tiles.py \
 MAP_DIR="$CARD_MOUNT/maps/osm"
 mkdir -p "$MAP_DIR"
 copy_tiles "tiles" "$MAP_DIR"
+
+# Ensure the default zoom-1 world fallback map is present.
+if [[ -f "$SCRIPT_DIR/build-world-base.sh" ]]; then
+  bash "$SCRIPT_DIR/build-world-base.sh" "$CARD_MOUNT" osm
+else
+  echo "Warning: build-world-base.sh not found, skipping world fallback tiles"
+fi
+
 rm -f "$MAP_DIR/metadata.json"
 sync
 

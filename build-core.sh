@@ -5,10 +5,12 @@ IFS=$'\n\t'
 usage() {
   cat <<USAGE
 Usage:
+  $0 --setup-thunderforest
   $0 "City, State" [min_zoom=4] [max_zoom=10] [source=terrain] [card_label_or_mount]
 
 Environment:
-  TDECK_MAPS_DIR   Path to the tdeck-maps repo (default: ~/tdeck-maps)
+  TDECK_MAPS_DIR          Path to the tdeck-maps repo (default: ~/tdeck-maps)
+  THUNDERFOREST_API_KEY   API key used for Thunderforest-backed sources
 USAGE
 }
 
@@ -19,6 +21,50 @@ die() {
 
 require_cmd() {
   command -v "$1" >/dev/null 2>&1 || die "Missing required command: $1"
+}
+
+thunderforest_source() {
+  case "$1" in
+    cycle|transport|landscape|outdoors|spinal-map|pioneer|mobile-atlas|neighbourhood|atlas)
+      return 0
+      ;;
+  esac
+  return 1
+}
+
+load_thunderforest_key() {
+  if [[ -z "${THUNDERFOREST_API_KEY:-}" ]] && [[ -f "$THUNDERFOREST_ENV_FILE" ]]; then
+    # shellcheck disable=SC1090
+    source "$THUNDERFOREST_ENV_FILE"
+  fi
+}
+
+prompt_thunderforest_key() {
+  local force_prompt="${1:-false}"
+  load_thunderforest_key
+
+  if [[ -n "${THUNDERFOREST_API_KEY:-}" ]] && [[ "$force_prompt" != "true" ]]; then
+    return 0
+  fi
+
+  [[ -t 0 ]] || die "THUNDERFOREST_API_KEY not set and no interactive terminal for prompt"
+
+  local api_key
+  printf "Enter Thunderforest API key: "
+  read -r -s api_key
+  echo
+  [[ -n "$api_key" ]] || die "Thunderforest API key cannot be empty"
+  export THUNDERFOREST_API_KEY="$api_key"
+
+  printf "Save key for future runs at %s? [Y/n]: " "$THUNDERFOREST_ENV_FILE"
+  local save_choice
+  read -r save_choice
+  if [[ -z "$save_choice" || "$save_choice" =~ ^[Yy]$ ]]; then
+    mkdir -p "$(dirname "$THUNDERFOREST_ENV_FILE")"
+    umask 077
+    printf 'export THUNDERFOREST_API_KEY=%q\n' "$THUNDERFOREST_API_KEY" > "$THUNDERFOREST_ENV_FILE"
+    echo "Saved Thunderforest API key."
+  fi
 }
 
 resolve_mount_from_label() {
@@ -87,12 +133,20 @@ if [[ "${1:-}" == "-h" || "${1:-}" == "--help" ]]; then
   exit 0
 fi
 
+if [[ "${1:-}" == "--setup-thunderforest" ]]; then
+  THUNDERFOREST_ENV_FILE="${THUNDERFOREST_ENV_FILE:-$HOME/.config/tdeck-maps/thunderforest.env}"
+  prompt_thunderforest_key true
+  echo "Thunderforest setup complete."
+  exit 0
+fi
+
 CITY="${1:-}"
 MIN_ZOOM="${2:-4}"
 MAX_ZOOM="${3:-10}"
 SOURCE="${4:-terrain}"
 CARD_NAME="${5:-}"
 TDECK_MAPS_DIR="${TDECK_MAPS_DIR:-$HOME/tdeck-maps}"
+THUNDERFOREST_ENV_FILE="${THUNDERFOREST_ENV_FILE:-$HOME/.config/tdeck-maps/thunderforest.env}"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 [[ -n "$CITY" ]] || {
@@ -112,6 +166,10 @@ CARD_MOUNT=$(find_card_mount "$CARD_NAME" || true)
 echo "Using SD card mount: $CARD_MOUNT"
 echo "Using tile source: $SOURCE"
 
+if thunderforest_source "$SOURCE"; then
+  prompt_thunderforest_key false
+fi
+
 cd "$TDECK_MAPS_DIR"
 rm -rf tiles
 
@@ -129,9 +187,9 @@ MAP_DIR="$CARD_MOUNT/maps/osm"
 mkdir -p "$MAP_DIR"
 copy_tiles "tiles" "$MAP_DIR"
 
-# Ensure the default zoom-1 world fallback map is present.
+# Ensure the default zoom-4 world fallback map is present.
 if [[ -f "$SCRIPT_DIR/build-world-base.sh" ]]; then
-  bash "$SCRIPT_DIR/build-world-base.sh" "$CARD_MOUNT" osm
+  bash "$SCRIPT_DIR/build-world-base.sh" "$CARD_MOUNT" osm 4
 else
   echo "Warning: build-world-base.sh not found, skipping world fallback tiles"
 fi

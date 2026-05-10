@@ -60,6 +60,12 @@ pip3 install requests Pillow
   You only need a Thunderforest API key if you use Thunderforest-backed sources (for example `cycle`, and any custom Thunderforest URLs you add).
   Default sources like `terrain`, `osm`, and `satellite` work without a Thunderforest key.
 
+  Interactive setup option:
+
+```bash
+./build-core.sh --setup-thunderforest
+```
+
    Example (`cycle` with API key):
 
 ```python
@@ -125,7 +131,7 @@ Insert SD card -> reboot -> open Maps in MUI
 ## ⚠️ Important
 
 - Maps must be in /maps/osm/
-- The project includes a default world fallback at zoom 1 so the map is never blank at startup
+- The project includes a default world fallback at zoom 4 so the map is never blank at startup
 - You must include zoom levels 4, 5, and 6
 - Public OSM tiles may return 403 errors
 - If the map is blank, zoom out first

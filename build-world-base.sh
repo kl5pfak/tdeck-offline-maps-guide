@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# Downloads default world fallback tiles at zoom 1 (4 tiles total)
+# Downloads default world fallback tiles at a chosen zoom level (default: 4)
 # and merges them onto the SD card without overwriting existing tiles.
 #
 # Run this once after any build to ensure the T-Deck always has a
 # world map at startup (default view is around 0°N/0°W = London area).
-# Zoom 1 gives global coverage so you can pan back to your region.
+# Default zoom 4 is a practical startup overview for T-Deck.
 #
 # Usage:
-#   ./build-world-base.sh [card_label=TDECK-AK] [source=terrain]
+#   ./build-world-base.sh [card_label=TDECK-AK] [source=osm] [zoom_level=4]
 
 CARD_TARGET="${1:-TDECK-AK}"
-SOURCE="${2:-terrain}"
+SOURCE="${2:-osm}"
+ZOOM_LEVEL="${3:-4}"
 
 resolve_mount() {
   local label="$1"
@@ -28,6 +29,8 @@ resolve_mount() {
 
 die() { echo "ERROR: $*" >&2; exit 1; }
 
+[[ "$ZOOM_LEVEL" =~ ^[0-9]+$ ]] || die "zoom_level must be a number"
+
 CARD_MOUNT=$(resolve_mount "$CARD_TARGET") || die "SD card not found: $CARD_TARGET"
 MAP_DIR="$CARD_MOUNT/maps/osm"
 mkdir -p "$MAP_DIR"
@@ -40,10 +43,11 @@ case "$SOURCE" in
   *)          die "Unsupported source: $SOURCE (use terrain, osm, satellite, usgs_topo)" ;;
 esac
 
-echo "Downloading world fallback tiles (zoom 1, 4 tiles) from $SOURCE..."
+tile_count=$(( (1 << ZOOM_LEVEL) * (1 << ZOOM_LEVEL) ))
+echo "Downloading world fallback tiles (zoom ${ZOOM_LEVEL}, ${tile_count} tiles) from $SOURCE..."
 echo "Destination: $MAP_DIR"
 
-for z in 1; do
+for z in "$ZOOM_LEVEL"; do
   max=$(( (1 << z) - 1 ))
   for x in $(seq 0 $max); do
     mkdir -p "$MAP_DIR/$z/$x"

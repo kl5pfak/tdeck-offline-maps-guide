@@ -5,45 +5,17 @@ setup() {
 }
 
 @test "all build scripts use bash shebang" {
-  run grep -E '^#!/usr/bin/env bash$' "$REPO_ROOT/build-core.sh"
-  [ "$status" -eq 0 ]
+  local script
+  local scripts=("$REPO_ROOT"/build-*.sh)
 
-  run grep -E '^#!/usr/bin/env bash$' "$REPO_ROOT/build-alaska.sh"
-  [ "$status" -eq 0 ]
-
-  run grep -E '^#!/usr/bin/env bash$' "$REPO_ROOT/build-fairbanks.sh"
-  [ "$status" -eq 0 ]
-
-  run grep -E '^#!/usr/bin/env bash$' "$REPO_ROOT/build-alaska-full.sh"
-  [ "$status" -eq 0 ]
-
-  run grep -E '^#!/usr/bin/env bash$' "$REPO_ROOT/build-charleston.sh"
-  [ "$status" -eq 0 ]
-
-  run grep -E '^#!/usr/bin/env bash$' "$REPO_ROOT/build-south-florida.sh"
-  [ "$status" -eq 0 ]
-
-  run grep -E '^#!/usr/bin/env bash$' "$REPO_ROOT/build-usgs-topo.sh"
-  [ "$status" -eq 0 ]
-
-  run grep -E '^#!/usr/bin/env bash$' "$REPO_ROOT/build-alaska-interior.sh"
-  [ "$status" -eq 0 ]
-
-  run grep -E '^#!/usr/bin/env bash$' "$REPO_ROOT/build-world-base.sh"
-  [ "$status" -eq 0 ]
+  for script in "${scripts[@]}"; do
+    run grep -E '^#!/usr/bin/env bash$' "$script"
+    [ "$status" -eq 0 ]
+  done
 }
 
 @test "all build scripts pass bash syntax check" {
-  run bash -n \
-    "$REPO_ROOT/build-core.sh" \
-    "$REPO_ROOT/build-alaska.sh" \
-    "$REPO_ROOT/build-fairbanks.sh" \
-    "$REPO_ROOT/build-alaska-full.sh" \
-    "$REPO_ROOT/build-charleston.sh" \
-    "$REPO_ROOT/build-south-florida.sh" \
-    "$REPO_ROOT/build-usgs-topo.sh" \
-    "$REPO_ROOT/build-alaska-interior.sh" \
-    "$REPO_ROOT/build-world-base.sh"
+  run bash -n "$REPO_ROOT"/build-*.sh
   [ "$status" -eq 0 ]
 }
 

@@ -41,6 +41,7 @@ load_thunderforest_key() {
 
 prompt_thunderforest_key() {
   local force_prompt="${1:-false}"
+  local requested_source="${2:-}"
   load_thunderforest_key
 
   if [[ -n "${THUNDERFOREST_API_KEY:-}" ]] && [[ "$force_prompt" != "true" ]]; then
@@ -48,6 +49,25 @@ prompt_thunderforest_key() {
   fi
 
   [[ -t 0 ]] || die "THUNDERFOREST_API_KEY not set and no interactive terminal for prompt"
+
+  if [[ "$force_prompt" != "true" ]]; then
+    local setup_choice
+    printf "THUNDERFOREST_API_KEY is not set. Add it now? [Yes/No]: "
+    read -r setup_choice
+    case "${setup_choice,,}" in
+      yes|y)
+        ;;
+      no|n|"")
+        if [[ -n "$requested_source" ]]; then
+          die "THUNDERFOREST_API_KEY is required for source '$requested_source'. Set it in env or run '$0 --setup-thunderforest'."
+        fi
+        die "THUNDERFOREST_API_KEY is required. Set it in env or run '$0 --setup-thunderforest'."
+        ;;
+      *)
+        die "Please answer Yes or No."
+        ;;
+    esac
+  fi
 
   local api_key
   printf "Enter Thunderforest API key: "
@@ -167,7 +187,7 @@ echo "Using SD card mount: $CARD_MOUNT"
 echo "Using tile source: $SOURCE"
 
 if thunderforest_source "$SOURCE"; then
-  prompt_thunderforest_key false
+  prompt_thunderforest_key false "$SOURCE"
 fi
 
 cd "$TDECK_MAPS_DIR"
@@ -188,8 +208,17 @@ mkdir -p "$MAP_DIR"
 copy_tiles "tiles" "$MAP_DIR"
 
 # Ensure the default zoom-4 world fallback map is present.
+WORLD_BASE_MARKER="$MAP_DIR/.world-base-osm-z4.done"
+WORLD_BASE_SENTINEL="$MAP_DIR/4/0/0.png"
 if [[ -f "$SCRIPT_DIR/build-world-base.sh" ]]; then
-  bash "$SCRIPT_DIR/build-world-base.sh" "$CARD_MOUNT" osm 4
+  if [[ -f "$WORLD_BASE_MARKER" ]] && [[ -f "$WORLD_BASE_SENTINEL" ]]; then
+    echo "World fallback tiles already present (zoom 4); skipping rebuild"
+  else
+    bash "$SCRIPT_DIR/build-world-base.sh" "$CARD_MOUNT" osm 4
+    if [[ -f "$WORLD_BASE_SENTINEL" ]]; then
+      : > "$WORLD_BASE_MARKER"
+    fi
+  fi
 else
   echo "Warning: build-world-base.sh not found, skipping world fallback tiles"
 fi

@@ -7,9 +7,5 @@ if ! command -v shellcheck >/dev/null 2>&1; then
 fi
 
 shellcheck \
-  build-core.sh \
-  build-alaska.sh \
-  build-fairbanks.sh \
-  build-alaska-full.sh \
-  build-charleston.sh \
-  build-anchorage.sh
+  build-*.sh \
+  scripts/*.sh

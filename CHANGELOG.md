@@ -6,6 +6,24 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [1.3.2] - 2026-05-30
+
+### Added
+- First-run Thunderforest key confirmation flow in `build-core.sh` with explicit Yes/No prompt before API key entry
+- Optional overlay `write_mode` in `build-overlay.sh` (`merge` default, `replace` for destructive sync)
+
+### Changed
+- `build-core.sh` now skips rebuilding zoom-4 world fallback tiles when they are already present
+- `README.md` overlay usage documentation now matches the current `build-overlay.sh` argument contract and includes `write_mode`
+- `scripts/lint-shell.sh` now lints all root `build-*.sh` scripts plus all scripts in `scripts/`
+- `tests/build_scripts.bats` now dynamically validates all root `build-*.sh` scripts for shebang and syntax checks
+
+### Fixed
+- `build-usgs-topo.sh` low-zoom fallback now uses `terrain` as intended instead of `usgs_topo`
+- `build-overlay.sh` no longer replaces existing `/maps/osm` content by default
+
+---
+
 ## [1.3.1] - 2026-04-20
 
 ### Changed

@@ -13,7 +13,7 @@ run_build() {
 }
 
 # World base at low zoom (opentopomap fallback — USGS is US only)
-run_build "Alaska" 0 3
+"$SCRIPT_DIR/build-core.sh" "Alaska" 0 3 terrain "$CARD_TARGET"
 
 # Alaska regional detail via USGS Topo
 run_build "Alaska" 4 7

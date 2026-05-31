@@ -112,9 +112,10 @@ def get_tile_url(self, x, y, zoom, source="osm"):
 
 **Overlays (layered maps with Thunderforest source):**
 ```bash
-# Format: build-overlay.sh "City, State" overlay_source [base_zoom_start] [base_zoom_end] [overlay_zoom_end] [base_source] [card_label]
+# Format: build-overlay.sh "City, State" overlay_source [base_zoom_max] [overlay_zoom_min] [overlay_zoom_max] [base_source] [card_label] [write_mode]
 ./build-overlay.sh "Anchorage, Alaska" cycle
 ./build-overlay.sh "Fairbanks, Alaska" cycle 6 7 13 terrain TDECK-AK
+./build-overlay.sh "Fairbanks, Alaska" cycle 6 7 13 terrain TDECK-AK replace
 ```
 
 **Vector overlays from potamap (GeoJSON for parks, peaks, etc.):**
